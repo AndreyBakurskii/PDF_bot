@@ -1,0 +1,1 @@
+This bot creates a PDF file from photos that the user will sent to it.
