@@ -80,7 +80,9 @@ def check_amount_of_photo(value: str) -> bool:
 
     try:
         value = int(value)
+
     except ValueError:
+
         return False
 
     return True

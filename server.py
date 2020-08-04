@@ -59,9 +59,11 @@ dispatcher.add_handler(tg_ext.CallbackQueryHandler(change_language))
 
 
 def create_pdf(update: tg.Update, context: tg_ext.CallbackContext):
+    username = update.effective_user.username
+    user = active_users.get_user(username)
 
-    update.message.reply_text("Input filename without extension, please.\n"
-                              "If you don't create pdf_file, send me /cancel")
+    update.message.reply_text(ans.answers[ans.ENTER_FILENAME][user.language] +
+                              ans.answers[ans.CANCEL_CREATE_PDF][user.language])
 
     return FILENAME
 
@@ -77,15 +79,15 @@ def get_filename(update: tg.Update, context: tg_ext.CallbackContext):
 
         user.append_document(doc.Document(username, filename))
 
-        update.message.reply_text("Send me amount of photo.\n"
-                                  "If you don't want to create pdf_file, send me /cancel")
+        update.message.reply_text(ans.answers[ans.SEND_AMOUNT_PHOTO][user.language] +
+                                  ans.answers[ans.CANCEL_CREATE_PDF][user.language])
 
         return AMOUNT_OF_PHOTOS
 
     else:
 
-        update.message.reply_text("Send me correct filename, please.\n"
-                                  "If you don't want to create pdf_file, send me /cancel")
+        update.message.reply_text(ans.answers[ans.CORRECT_FILENAME][user.language] +
+                                  ans.answers[ans.CANCEL_CREATE_PDF][user.language])
 
         return FILENAME
 
@@ -100,15 +102,15 @@ def get_amount_of_photo(update: tg.Update, context: tg_ext.CallbackContext):
     if doc.check_amount_of_photo(value):
 
         user.document.append_amount_of_photo(int(value))
-        update.message.reply_text("Send me photo.\n"
-                                  "If you don't create pdf_file, send me /cancel")
+        update.message.reply_text(ans.answers[ans.SEND_PHOTO][user.language] +
+                                  ans.answers[ans.CANCEL_CREATE_PDF][user.language])
 
         return PHOTO
 
     else:
 
-        update.message.reply_text("Send me correct value for the amount of photo, please.\n"
-                                  "If you don't create pdf_file, send me /cancel")
+        update.message.reply_text(ans.answers[ans.CORRECT_AMOUNT_PHOTO][user.language] +
+                                  ans.answers[ans.CANCEL_CREATE_PDF][user.language])
 
         return AMOUNT_OF_PHOTOS
 
@@ -123,9 +125,8 @@ def get_photo(update: tg.Update, context: tg_ext.CallbackContext):
     current_state = user.document.append_photo(photo)
 
     if current_state:
-        update.message.reply_text("All photos added to your pdf file!\n"
-                                  "If you want to add another photos, send me /add, otherwise, /end\n"
-                                  "If you don't create pdf_file, send me /cancel")
+        update.message.reply_text(ans.answers[ans.ADD_or_END][user.language] +
+                                  ans.answers[ans.CANCEL_CREATE_PDF][user.language])
         return ADD_OR_END
 
     else:
@@ -134,8 +135,11 @@ def get_photo(update: tg.Update, context: tg_ext.CallbackContext):
 
 def add_photos(update: tg.Update, context: tg_ext.CallbackContext):
 
-    update.message.reply_text("Ok, send me amount of photo, which need to add.\n"
-                              "If you don't create pdf_file, send me /cancel")
+    username = update.effective_user.username
+    user = active_users.get_user(username)
+
+    update.message.reply_text(ans.answers[ans.ADD_PHOTO][user.language] +
+                              ans.answers[ans.CANCEL_CREATE_PDF][user.language])
 
     return AMOUNT_OF_PHOTOS
 
@@ -145,12 +149,12 @@ def end_pdf(update: tg.Update, context: tg_ext.CallbackContext):
     username = update.effective_user.username
     user = active_users.get_user(username)
 
-    update.message.reply_text("Please, wait some time!")
+    update.message.reply_text(ans.answers[ans.WAIT_TIME][user.language])
 
     path = doc.convert2pdf(user.document)
 
     update.message.bot.send_document(update.message.chat.id, open(path, 'rb'))
-    update.message.reply_text("Thank you for using me! See you again!")
+    update.message.reply_text(ans.answers[ans.BYE][user.language])
 
     user.delete_document()
 
@@ -162,7 +166,7 @@ def cancel(update: tg.Update, context: tg_ext.CallbackContext):
     username = update.effective_user.username
     user = active_users.get_user(username)
 
-    update.message.reply_text("Thank you for using me! See you again!")
+    update.message.reply_text(ans.answers[ans.BYE][user.language])
 
     user.delete_document()
 

@@ -25,7 +25,7 @@ class User():
 
 class ListUsers(list):
 
-    def get_user(self, username):
+    def get_user(self, username) -> User:
 
         for user in self:
 
