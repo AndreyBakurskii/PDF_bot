@@ -19,11 +19,11 @@ class Document():
         self.path_to_directory = self.path2dir(username)
         self.path_to_document = self.path2doc(self.path_to_directory, filename)
 
-    def get_amount_of_photo(self, value):
+    def append_amount_of_photo(self, value):
 
         self.amount_of_photo += value
 
-    def get_photo(self, photo: File):
+    def append_photo(self, photo: File):
 
         extension_of_photo = photo.file_path[photo.file_path.rfind(".")::].lower()
 
@@ -63,29 +63,6 @@ class Document():
     def delete_doc(self):
 
         shutil.rmtree(self.path_to_directory)
-
-
-class Documents(list):
-
-    def get_document(self, username) -> Document or None:
-
-        for doc in self:
-
-            if doc.username == username:
-
-                return doc
-
-        return None
-
-    def delete_document(self, username):
-
-        for index, doc in enumerate(self):
-
-            if doc.username == username:
-
-                doc.delete_doc()
-
-                return self.pop(index)
 
 
 def check_filename(filename: str) -> bool:
