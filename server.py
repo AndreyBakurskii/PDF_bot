@@ -40,7 +40,7 @@ def choose_language(update: tg.Update, context: tg_ext.CallbackContext):
 dispatcher.add_handler(tg_ext.CommandHandler('change_language', choose_language))
 
 
-def change_language(update, context):
+def change_language(update: tg.Update, context: tg_ext.CallbackContext):
     username = update.effective_user.username
     user = active_users.get_user(username)
 
@@ -54,8 +54,22 @@ def change_language(update, context):
 
     user.change_language(language)
 
+    tg_help(update, context)
+
 
 dispatcher.add_handler(tg_ext.CallbackQueryHandler(change_language))
+
+
+# просто help нельзя потому что есть функция в builtins, поэтому tg_help
+def tg_help(update: tg.Update, context: tg_ext.CallbackContext):
+
+    username = update.effective_user.username
+    user = active_users.get_user(username)
+
+    user.tg_user.send_message(text=ans.answers[ans.HELP][user.language])
+
+
+dispatcher.add_handler(tg_ext.CommandHandler("help", tg_help))
 
 
 def create_pdf(update: tg.Update, context: tg_ext.CallbackContext):

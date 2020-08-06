@@ -16,12 +16,15 @@ class User():
 
     def delete_document(self):
 
-        self.document.delete_doc()
-        self.document = None
+        if self.document is not None:
+
+            self.document.delete_doc()
+            self.document = None
 
     def change_language(self, language):
 
         self.language = language
+
 
 class ListUsers(list):
 
@@ -31,8 +34,6 @@ class ListUsers(list):
 
             if username == user.tg_user.username:
                 return user
-
-        return None
 
     def delete_user(self, username):
 
